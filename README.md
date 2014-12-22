@@ -1,4 +1,4 @@
-ZfSnapVarConfig
+ZfSnapVarConfig [![Build Status](https://travis-ci.org/snapshotpl/ZfSnapVarConfig.svg?branch=master)](https://travis-ci.org/snapshotpl/ZfSnapVarConfig)
 ===============
 
 Variables in configuration for Zend Framework 2
