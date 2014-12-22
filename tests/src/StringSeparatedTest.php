@@ -9,6 +9,13 @@ namespace ZfSnapVarConfig\Test;
  */
 class StringSeparatedTest extends \PHPUnit_Framework_TestCase
 {
+    public function testImplementsInterface()
+    {
+        $object = new \ZfSnapVarConfig\StringSeparated('foo.bar');
+
+        $this->assertInstanceOf('\ZfSnapVarConfig\VarConfigInterface', $object);
+    }
+
     public function testDefaultSeparator()
     {
         $defaultSeparator = \ZfSnapVarConfig\StringSeparated::DEFAULT_SEPARATOR;

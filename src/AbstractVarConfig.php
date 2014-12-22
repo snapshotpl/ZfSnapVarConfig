@@ -7,7 +7,7 @@ namespace ZfSnapVarConfig;
  *
  * @author Witold Wasiczko <witold@wasiczko.pl>
  */
-abstract class AbstractVarConfig
+abstract class AbstractVarConfig implements VarConfigInterface
 {
     /**
      * @var array
