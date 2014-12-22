@@ -1,0 +1,29 @@
+{
+    "name": "snapshotpl/zf-snap-var-config",
+    "description": "Variables in configuration for Zend Framework 2",
+    "keywords": [
+        "zf2",
+        "zend framework",
+        "zend framework 2",
+        "configuration"
+    ],
+    "authors": [
+        {
+            "name": "Witold Wasiczko",
+            "email": "witold@wasiczko.pl",
+            "homepage": "http://www.psd2html.pl/"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "zendframework/zendframework": "~2.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ZfSnapVarConfig\\": "src/"
+        }
+    }
+}
