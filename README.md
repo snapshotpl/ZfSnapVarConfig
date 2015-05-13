@@ -20,8 +20,6 @@ return array(
 Of course it's working, but when you want to share `$myIp` between separate config files thats challange! ZfSnapVarConfig make a magic here!
 
 ```php
-use ZfSnapVarConfig;
-
 return array(
   'ips' => array(
     'local' => '127.0.0.1',
@@ -29,22 +27,20 @@ return array(
     'smtp' => '127.0.0.3'
   ),
   'email' => 'your@email.com',
-  'db' => StringSeparated('ips.local'),
-  'memcache' => StringSeparated('ips|memcache', '|'),
+  'db' => new \ZfSnapVarConfig\StringSeparated('ips.local'),
+  'memcache' => new \ZfSnapVarConfig\StringSeparated('ips|memcache', '|'),
   'email' => array(
-    'smtp' => ArrayList(['ips', 'smtp']),
-    'default-mail' => StringSeparated('email'),
-    'reply-to' => StringSeparated('email'),
+    'smtp' => new \ZfSnapVarConfig\ArrayList(['ips', 'smtp']),
+    'default-mail' => new \ZfSnapVarConfig\StringSeparated('email'),
+    'reply-to' => new \ZfSnapVarConfig\StringSeparated('email'),
   ),
 );
 ```
 
 ```php
-use ZfSnapVarConfig;
-
 return array(
   'form' => array(
-    'address' => StringSeparated('email'),
+    'address' => new \ZfSnapVarConfig\StringSeparated('email'),
   ),
 );
 ```
