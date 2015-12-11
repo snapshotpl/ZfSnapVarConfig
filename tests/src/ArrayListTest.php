@@ -2,7 +2,6 @@
 
 namespace ZfSnapVarConfig\Test;
 
-use PHPUnit_Framework_Error;
 use PHPUnit_Framework_TestCase;
 use ZfSnapVarConfig\ArrayList;
 
@@ -29,15 +28,5 @@ class ArrayListTest extends PHPUnit_Framework_TestCase
         $output = $arrayList->getNestedKeys();
 
         $this->assertEquals($input, $output);
-    }
-
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     * @expectedExceptionMessage array, string given
-     */
-    public function testKeysAllowsArrays()
-    {
-        $string = 'string';
-        new ArrayList($string);
     }
 }
