@@ -57,7 +57,7 @@ Via [composer.json](https://getcomposer.org/)
 ```json
 {
     "require": {
-        "snapshotpl/zf-snap-var-config": "dev-master"
+        "snapshotpl/zf-snap-var-config": "~1.0"
     }
 }
 ```
