@@ -6,11 +6,6 @@ use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\ModuleEvent;
 use Zend\ModuleManager\ModuleManagerInterface;
 
-/**
- * Module
- *
- * @author Witold Wasiczko <witold@wasiczko.pl>
- */
 class Module implements InitProviderInterface
 {
 

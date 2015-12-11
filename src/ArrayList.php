@@ -2,11 +2,6 @@
 
 namespace ZfSnapVarConfig;
 
-/**
- * ArrayList
- *
- * @author Witold Wasiczko <witold@wasiczko.pl>
- */
 final class ArrayList extends AbstractVarConfig
 {
 
