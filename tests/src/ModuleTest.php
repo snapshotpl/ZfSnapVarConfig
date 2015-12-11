@@ -1,25 +1,17 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace ZfSnapVarConfig\Test;
 
-/**
- * ModuleTest
- *
- * @author Witold Wasiczko <witold@wasiczko.pl>
- */
-class ModuleTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+use ZfSnapVarConfig\Module;
+
+class ModuleTest extends PHPUnit_Framework_TestCase
 {
     protected $module;
 
     protected function setUp()
     {
-        $this->module = new \ZfSnapVarConfig\Module();
+        $this->module = new Module();
     }
 
     public function testPrepareConfigFromFirstElement()
@@ -135,5 +127,4 @@ class ModuleTest extends \PHPUnit_Framework_TestCase
         );
         $this->module->prepareConfig($config);
     }
-
 }

@@ -86,13 +86,12 @@ class Module implements InitProviderInterface
      */
     public function getAutoloaderConfig()
     {
-        return [
-            'Zend\Loader\StandardAutoloader' => [
-                'namespaces' => [
+        return array(
+            'Zend\Loader\StandardAutoloader' => array(
+                'namespaces' => array(
                     __NAMESPACE__ => __DIR__,
-                ],
-            ],
-        ];
+                ),
+            ),
+        );
     }
-
 }

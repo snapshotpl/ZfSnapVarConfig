@@ -1,19 +1,12 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace ZfSnapVarConfig\Test;
 
-/**
- * ArrayListTest
- *
- * @author Witold Wasiczko <witold@wasiczko.pl>
- */
-class ArrayListTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_Error;
+use PHPUnit_Framework_TestCase;
+use ZfSnapVarConfig\ArrayList;
+
+class ArrayListTest extends PHPUnit_Framework_TestCase
 {
     public function testImplementsInterface()
     {
@@ -21,7 +14,7 @@ class ArrayListTest extends \PHPUnit_Framework_TestCase
             'foo' => 'boo',
             'boo' => 'bar',
         );
-        $arrayList = new \ZfSnapVarConfig\ArrayList($input);
+        $arrayList = new ArrayList($input);
 
         $this->assertInstanceOf('\ZfSnapVarConfig\VarConfigInterface', $arrayList);
     }
@@ -32,7 +25,7 @@ class ArrayListTest extends \PHPUnit_Framework_TestCase
             'foo' => 'boo',
             'boo' => 'bar',
         );
-        $arrayList = new \ZfSnapVarConfig\ArrayList($input);
+        $arrayList = new ArrayList($input);
         $output = $arrayList->getNestedKeys();
 
         $this->assertEquals($input, $output);
@@ -45,6 +38,6 @@ class ArrayListTest extends \PHPUnit_Framework_TestCase
     public function testKeysAllowsArrays()
     {
         $string = 'string';
-        new \ZfSnapVarConfig\ArrayList($string);
+        new ArrayList($string);
     }
 }

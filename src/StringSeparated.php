@@ -7,7 +7,7 @@ namespace ZfSnapVarConfig;
  *
  * @author Witold Wasiczko <witold@wasiczko.pl>
  */
-class StringSeparated extends AbstractVarConfig
+final class StringSeparated extends AbstractVarConfig
 {
     const DEFAULT_SEPARATOR = '.';
 

@@ -17,7 +17,7 @@ abstract class AbstractVarConfig implements VarConfigInterface
     /**
      * @return array
      */
-    public function getNestedKeys()
+    final public function getNestedKeys()
     {
         return (array) $this->keys;
     }
