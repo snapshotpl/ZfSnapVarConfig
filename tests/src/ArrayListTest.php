@@ -4,6 +4,7 @@ namespace ZfSnapVarConfig\Test;
 
 use PHPUnit_Framework_TestCase;
 use ZfSnapVarConfig\ArrayList;
+use ZfSnapVarConfig\VarConfigInterface;
 
 class ArrayListTest extends PHPUnit_Framework_TestCase
 {
@@ -15,7 +16,7 @@ class ArrayListTest extends PHPUnit_Framework_TestCase
         );
         $arrayList = new ArrayList($input);
 
-        $this->assertInstanceOf('\ZfSnapVarConfig\VarConfigInterface', $arrayList);
+        $this->assertInstanceOf(VarConfigInterface::class, $arrayList);
     }
 
     public function testPropertyProcess()

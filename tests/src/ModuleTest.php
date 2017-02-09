@@ -3,7 +3,9 @@
 namespace ZfSnapVarConfig\Test;
 
 use PHPUnit_Framework_TestCase;
+use ZfSnapVarConfig\Exception;
 use ZfSnapVarConfig\Module;
+use ZfSnapVarConfig\VarConfigInterface;
 
 class ModuleTest extends PHPUnit_Framework_TestCase
 {
@@ -16,7 +18,7 @@ class ModuleTest extends PHPUnit_Framework_TestCase
 
     public function testPrepareConfigFromFirstElement()
     {
-        $mock = $this->getMock('ZfSnapVarConfig\VarConfigInterface', array('getNestedKeys'));
+        $mock = $this->getMock(VarConfigInterface::class, array('getNestedKeys'));
         $mock->expects($this->any())->method('getNestedKeys')->willReturn(array(
             'sharedConfig',
         ));
@@ -32,7 +34,7 @@ class ModuleTest extends PHPUnit_Framework_TestCase
 
     public function testPrepareConfigFromNestedKeys()
     {
-        $mock = $this->getMock('ZfSnapVarConfig\VarConfigInterface', array('getNestedKeys'));
+        $mock = $this->getMock(VarConfigInterface::class, array('getNestedKeys'));
         $mock->expects($this->any())->method('getNestedKeys')->willReturn(array(
             'sharedConfig',
             'nested',
@@ -54,14 +56,14 @@ class ModuleTest extends PHPUnit_Framework_TestCase
 
     public function testPrepareConfigFromNestedVars()
     {
-        $mock = $this->getMock('ZfSnapVarConfig\VarConfigInterface', array('getNestedKeys'));
+        $mock = $this->getMock(VarConfigInterface::class, array('getNestedKeys'));
         $mock->expects($this->any())->method('getNestedKeys')->willReturn(array(
             'sharedConfig',
             'nested',
             'very',
         ));
 
-        $mockTwo = $this->getMock('ZfSnapVarConfig\VarConfigInterface', array('getNestedKeys'));
+        $mockTwo = $this->getMock(VarConfigInterface::class, array('getNestedKeys'));
         $mockTwo->expects($this->any())->method('getNestedKeys')->willReturn(array(
             'value',
         ));
@@ -80,43 +82,37 @@ class ModuleTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($config['value'], $preparedConfig['awesome']);
     }
 
-    /**
-     * @expectedException \ZfSnapVarConfig\Exception
-     * @expectedExceptionMessage It is not an array or is empty
-     */
     public function testFailPrepareConfigFromEmptyArray()
     {
-        $mock = $this->getMock('ZfSnapVarConfig\VarConfigInterface', array('getNestedKeys'));
+        $mock = $this->getMock(VarConfigInterface::class, array('getNestedKeys'));
         $mock->expects($this->any())->method('getNestedKeys')->willReturn(array());
 
         $config = array(
             'awesome' => $mock,
         );
+
+        $this->setExpectedException(Exception::class, 'It is not an array or is empty');
+
         $this->module->prepareConfig($config);
     }
 
-    /**
-     * @expectedException \ZfSnapVarConfig\Exception
-     * @expectedExceptionMessage It is not an array or is empty
-     */
     public function testFailPrepareConfigFromNonArray()
     {
-        $mock = $this->getMock('ZfSnapVarConfig\VarConfigInterface', array('getNestedKeys'));
+        $mock = $this->getMock(VarConfigInterface::class, array('getNestedKeys'));
         $mock->expects($this->any())->method('getNestedKeys')->willReturn('string');
 
         $config = array(
             'awesome' => $mock,
         );
+
+        $this->setExpectedException(Exception::class, 'It is not an array or is empty');
+
         $this->module->prepareConfig($config);
     }
 
-    /**
-     * @expectedException \ZfSnapVarConfig\Exception
-     * @expectedExceptionMessage Unknown configuration key baz
-     */
     public function testFailPrepareConfigFromNonExisitigKey()
     {
-        $mock = $this->getMock('ZfSnapVarConfig\VarConfigInterface', array('getNestedKeys'));
+        $mock = $this->getMock(VarConfigInterface::class, array('getNestedKeys'));
         $mock->expects($this->any())->method('getNestedKeys')->willReturn(array(
             'baz'
         ));
@@ -125,6 +121,9 @@ class ModuleTest extends PHPUnit_Framework_TestCase
             'bar' => 'foo',
             'awesome' => $mock,
         );
+
+        $this->setExpectedException(Exception::class, 'Unknown configuration key baz');
+
         $this->module->prepareConfig($config);
     }
 }

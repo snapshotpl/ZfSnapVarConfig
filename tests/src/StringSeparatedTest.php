@@ -5,6 +5,7 @@ namespace ZfSnapVarConfig\Test;
 use PHPUnit_Framework_TestCase;
 use ZfSnapVarConfig\Exception;
 use ZfSnapVarConfig\StringSeparated;
+use ZfSnapVarConfig\VarConfigInterface;
 
 class StringSeparatedTest extends PHPUnit_Framework_TestCase
 {
@@ -12,7 +13,7 @@ class StringSeparatedTest extends PHPUnit_Framework_TestCase
     {
         $object = new StringSeparated('foo.bar');
 
-        $this->assertInstanceOf('\ZfSnapVarConfig\VarConfigInterface', $object);
+        $this->assertInstanceOf(VarConfigInterface::class, $object);
     }
 
     public function testDefaultSeparator()
@@ -21,7 +22,7 @@ class StringSeparatedTest extends PHPUnit_Framework_TestCase
         $object = new StringSeparated('foo'. $defaultSeparator .'bar');
         $keys = $object->getNestedKeys();
 
-        $this->assertEquals(array('foo', 'bar'), $keys);
+        $this->assertEquals(['foo', 'bar'], $keys);
     }
 
     public function testDefaultNoSeparated()
@@ -29,7 +30,7 @@ class StringSeparatedTest extends PHPUnit_Framework_TestCase
         $object = new StringSeparated('foo');
         $keys = $object->getNestedKeys();
 
-        $this->assertEquals(array('foo'), $keys);
+        $this->assertEquals(['foo'], $keys);
     }
 
     public function testCustomSeparator()
@@ -37,23 +38,21 @@ class StringSeparatedTest extends PHPUnit_Framework_TestCase
         $object = new StringSeparated('foo|bar|baz', '|');
         $keys = $object->getNestedKeys();
 
-        $this->assertEquals(array('foo', 'bar', 'baz'), $keys);
+        $this->assertEquals(['foo', 'bar', 'baz'], $keys);
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testFirstParameterAllowOnlyString()
     {
-        new StringSeparated(array('foo', 'bar'));
+        $this->setExpectedException(Exception::class);
+
+        new StringSeparated(['foo', 'bar']);
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testSecondParameterAllowOnlyString()
     {
-        new StringSeparated('foo', array());
+        $this->setExpectedException(Exception::class);
+
+        new StringSeparated('foo', []);
     }
 
     public function testLongSeparatorString()
@@ -61,6 +60,6 @@ class StringSeparatedTest extends PHPUnit_Framework_TestCase
         $object = new StringSeparated('foo:::bar:::baz', ':::');
         $keys = $object->getNestedKeys();
 
-        $this->assertEquals(array('foo', 'bar', 'baz'), $keys);
+        $this->assertEquals(['foo', 'bar', 'baz'], $keys);
     }
 }
