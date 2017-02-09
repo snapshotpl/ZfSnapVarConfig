@@ -3,7 +3,7 @@
 namespace ZfSnapVarConfig\Test;
 
 use PHPUnit_Framework_TestCase;
-use ZfSnapVarConfig\ArrayList;
+use ZfSnapVarConfig\ArgsList;
 use ZfSnapVarConfig\Exception;
 use ZfSnapVarConfig\Module;
 use ZfSnapVarConfig\VarConfigInterface;
@@ -21,7 +21,7 @@ class ModuleTest extends PHPUnit_Framework_TestCase
     {
         $config = [
             'sharedConfig' => 'sharedValue',
-            'awesome' => new ArrayList(['sharedConfig']),
+            'awesome' => new ArgsList('sharedConfig'),
         ];
         $preparedConfig = $this->module->prepareConfig($config);
 
@@ -36,7 +36,7 @@ class ModuleTest extends PHPUnit_Framework_TestCase
                     'very' => 'nestedValue',
                 ],
             ],
-            'awesome' => new ArrayList(['sharedConfig', 'nested', 'very']),
+            'awesome' => new ArgsList('sharedConfig', 'nested', 'very'),
         ];
         $preparedConfig = $this->module->prepareConfig($config);
 
@@ -49,10 +49,10 @@ class ModuleTest extends PHPUnit_Framework_TestCase
             'value' => 'baz',
             'sharedConfig' => [
                 'nested' => [
-                    'very' => new ArrayList(['value']),
+                    'very' => new ArgsList('value'),
                 ],
             ],
-            'awesome' => new ArrayList(['sharedConfig', 'nested', 'very']),
+            'awesome' => new ArgsList('sharedConfig', 'nested', 'very'),
         ];
         $preparedConfig = $this->module->prepareConfig($config);
 
@@ -64,9 +64,9 @@ class ModuleTest extends PHPUnit_Framework_TestCase
         $config = [
             'value' => 'baz',
             'sharedConfig' => [
-                'nesteded' => new ArrayList(['sharedConfig', 'nested']),
+                'nesteded' => new ArgsList('sharedConfig', 'nested'),
                 'nested' => [
-                    'very' => new ArrayList(['value']),
+                    'very' => new ArgsList('value'),
                 ],
             ],
         ];
@@ -78,7 +78,7 @@ class ModuleTest extends PHPUnit_Framework_TestCase
     public function testFailPrepareConfigFromEmptyArray()
     {
         $config = [
-            'awesome' => new ArrayList([]),
+            'awesome' => new ArgsList(),
         ];
 
         $this->setExpectedException(Exception::class, 'It is not an array or is empty');
@@ -108,10 +108,26 @@ class ModuleTest extends PHPUnit_Framework_TestCase
 
         $config = array(
             'bar' => 'foo',
-            'awesome' => new ArrayList(['baz']),
+            'awesome' => new ArgsList('baz'),
         );
 
         $this->setExpectedException(Exception::class, 'Unknown configuration key baz');
+
+        $this->module->prepareConfig($config);
+    }
+
+    public function testFailPrepareConfigFromNonExisitigNestedKey()
+    {
+        $mock = $this->createMock(VarConfigInterface::class, array('getNestedKeys'));
+        $mock->expects($this->any())->method('getNestedKeys')->willReturn(array(
+        ));
+
+        $config = array(
+            'bar' => 'foo',
+            'awesome' => new ArgsList('bar', 'baz'),
+        );
+
+        $this->setExpectedException(Exception::class, 'Unknown configuration key bar->baz');
 
         $this->module->prepareConfig($config);
     }
