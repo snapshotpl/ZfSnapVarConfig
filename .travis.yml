@@ -24,9 +24,12 @@ matrix:
     - php: hhvm
       env: DEPS=latest
 
+before_install:
+  - phpenv config-rm xdebug.ini
+
 install:
-  - if [[ $DEPS == 'latest' ]]; then travis_retry composer update --no-interaction --prefer-source ; fi
-  - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --no-interaction --prefer-source --prefer-lowest ; fi
+  - if [[ $DEPS == 'latest' ]]; then travis_retry composer update --prefer-dist --no-interaction ; fi
+  - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest ; fi
 
 script:
     - phpunit
