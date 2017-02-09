@@ -3,6 +3,7 @@
 namespace ZfSnapVarConfig\Test;
 
 use PHPUnit_Framework_TestCase;
+use ZfSnapVarConfig\ArrayList;
 use ZfSnapVarConfig\Exception;
 use ZfSnapVarConfig\Module;
 use ZfSnapVarConfig\VarConfigInterface;
@@ -18,15 +19,10 @@ class ModuleTest extends PHPUnit_Framework_TestCase
 
     public function testPrepareConfigFromFirstElement()
     {
-        $mock = $this->getMock(VarConfigInterface::class, array('getNestedKeys'));
-        $mock->expects($this->any())->method('getNestedKeys')->willReturn(array(
-            'sharedConfig',
-        ));
-
-        $config = array(
+        $config = [
             'sharedConfig' => 'sharedValue',
-            'awesome' => $mock,
-        );
+            'awesome' => new ArrayList(['sharedConfig']),
+        ];
         $preparedConfig = $this->module->prepareConfig($config);
 
         $this->assertEquals($config['sharedConfig'], $preparedConfig['awesome']);
@@ -34,21 +30,14 @@ class ModuleTest extends PHPUnit_Framework_TestCase
 
     public function testPrepareConfigFromNestedKeys()
     {
-        $mock = $this->getMock(VarConfigInterface::class, array('getNestedKeys'));
-        $mock->expects($this->any())->method('getNestedKeys')->willReturn(array(
-            'sharedConfig',
-            'nested',
-            'very',
-        ));
-
-        $config = array(
-            'sharedConfig' => array(
-                'nested' => array(
+        $config = [
+            'sharedConfig' => [
+                'nested' => [
                     'very' => 'nestedValue',
-                )
-            ),
-            'awesome' => $mock,
-        );
+                ],
+            ],
+            'awesome' => new ArrayList(['sharedConfig','nested','very']),
+        ];
         $preparedConfig = $this->module->prepareConfig($config);
 
         $this->assertEquals($config['sharedConfig']['nested']['very'], $preparedConfig['awesome']);
@@ -56,27 +45,15 @@ class ModuleTest extends PHPUnit_Framework_TestCase
 
     public function testPrepareConfigFromNestedVars()
     {
-        $mock = $this->getMock(VarConfigInterface::class, array('getNestedKeys'));
-        $mock->expects($this->any())->method('getNestedKeys')->willReturn(array(
-            'sharedConfig',
-            'nested',
-            'very',
-        ));
-
-        $mockTwo = $this->getMock(VarConfigInterface::class, array('getNestedKeys'));
-        $mockTwo->expects($this->any())->method('getNestedKeys')->willReturn(array(
-            'value',
-        ));
-
-        $config = array(
+        $config = [
             'value' => 'baz',
-            'sharedConfig' => array(
-                'nested' => array(
-                    'very' => $mockTwo,
-                )
-            ),
-            'awesome' => $mock,
-        );
+            'sharedConfig' => [
+                'nested' => [
+                    'very' => new ArrayList(['value']),
+                ],
+            ],
+            'awesome' => new ArrayList(['sharedConfig', 'nested','very']),
+        ];
         $preparedConfig = $this->module->prepareConfig($config);
 
         $this->assertEquals($config['value'], $preparedConfig['awesome']);
@@ -84,12 +61,9 @@ class ModuleTest extends PHPUnit_Framework_TestCase
 
     public function testFailPrepareConfigFromEmptyArray()
     {
-        $mock = $this->getMock(VarConfigInterface::class, array('getNestedKeys'));
-        $mock->expects($this->any())->method('getNestedKeys')->willReturn(array());
-
-        $config = array(
-            'awesome' => $mock,
-        );
+        $config = [
+            'awesome' => new ArrayList([]),
+        ];
 
         $this->setExpectedException(Exception::class, 'It is not an array or is empty');
 
@@ -98,12 +72,12 @@ class ModuleTest extends PHPUnit_Framework_TestCase
 
     public function testFailPrepareConfigFromNonArray()
     {
-        $mock = $this->getMock(VarConfigInterface::class, array('getNestedKeys'));
-        $mock->expects($this->any())->method('getNestedKeys')->willReturn('string');
+        $mock = $this->createMock(VarConfigInterface::class, array('getNestedKeys'));
+        $mock->method('getNestedKeys')->willReturn('string');
 
-        $config = array(
+        $config = [
             'awesome' => $mock,
-        );
+        ];
 
         $this->setExpectedException(Exception::class, 'It is not an array or is empty');
 
@@ -112,14 +86,14 @@ class ModuleTest extends PHPUnit_Framework_TestCase
 
     public function testFailPrepareConfigFromNonExisitigKey()
     {
-        $mock = $this->getMock(VarConfigInterface::class, array('getNestedKeys'));
+        $mock = $this->createMock(VarConfigInterface::class, array('getNestedKeys'));
         $mock->expects($this->any())->method('getNestedKeys')->willReturn(array(
-            'baz'
+
         ));
 
         $config = array(
             'bar' => 'foo',
-            'awesome' => $mock,
+            'awesome' => new ArrayList(['baz']),
         );
 
         $this->setExpectedException(Exception::class, 'Unknown configuration key baz');
