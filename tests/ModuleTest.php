@@ -25,7 +25,7 @@ class ModuleTest extends PHPUnit_Framework_TestCase
         ];
         $preparedConfig = $this->module->prepareConfig($config);
 
-        $this->assertEquals($config['sharedConfig'], $preparedConfig['awesome']);
+        $this->assertSame($config['sharedConfig'], $preparedConfig['awesome']);
     }
 
     public function testPrepareConfigFromNestedKeys()
@@ -36,11 +36,11 @@ class ModuleTest extends PHPUnit_Framework_TestCase
                     'very' => 'nestedValue',
                 ],
             ],
-            'awesome' => new ArrayList(['sharedConfig','nested','very']),
+            'awesome' => new ArrayList(['sharedConfig', 'nested', 'very']),
         ];
         $preparedConfig = $this->module->prepareConfig($config);
 
-        $this->assertEquals($config['sharedConfig']['nested']['very'], $preparedConfig['awesome']);
+        $this->assertSame($config['sharedConfig']['nested']['very'], $preparedConfig['awesome']);
     }
 
     public function testPrepareConfigFromNestedVars()
@@ -52,11 +52,27 @@ class ModuleTest extends PHPUnit_Framework_TestCase
                     'very' => new ArrayList(['value']),
                 ],
             ],
-            'awesome' => new ArrayList(['sharedConfig', 'nested','very']),
+            'awesome' => new ArrayList(['sharedConfig', 'nested', 'very']),
         ];
         $preparedConfig = $this->module->prepareConfig($config);
 
-        $this->assertEquals($config['value'], $preparedConfig['awesome']);
+        $this->assertSame($config['value'], $preparedConfig['awesome']);
+    }
+
+    public function testPrepareConfigFromNestedVars2()
+    {
+        $config = [
+            'value' => 'baz',
+            'sharedConfig' => [
+                'nesteded' => new ArrayList(['sharedConfig', 'nested']),
+                'nested' => [
+                    'very' => new ArrayList(['value']),
+                ],
+            ],
+        ];
+        $preparedConfig = $this->module->prepareConfig($config);
+
+        $this->assertSame(['very' => 'baz'], $preparedConfig['sharedConfig']['nesteded']);
     }
 
     public function testFailPrepareConfigFromEmptyArray()
@@ -88,7 +104,6 @@ class ModuleTest extends PHPUnit_Framework_TestCase
     {
         $mock = $this->createMock(VarConfigInterface::class, array('getNestedKeys'));
         $mock->expects($this->any())->method('getNestedKeys')->willReturn(array(
-
         ));
 
         $config = array(
