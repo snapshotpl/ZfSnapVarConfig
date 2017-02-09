@@ -26,8 +26,6 @@ matrix:
 
 before_install:
   - phpenv config-rm xdebug.ini || return 0
-
-install:
   - if [[ $DEPS == 'latest' ]]; then travis_retry composer update --prefer-dist --no-interaction ; fi
   - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest ; fi
 
