@@ -10,10 +10,10 @@ class ArrayListTest extends PHPUnit_Framework_TestCase
 {
     public function testImplementsInterface()
     {
-        $input = array(
+        $input = [
             'foo' => 'boo',
             'boo' => 'bar',
-        );
+        ];
         $arrayList = new ArrayList($input);
 
         $this->assertInstanceOf(VarConfigInterface::class, $arrayList);
@@ -21,13 +21,13 @@ class ArrayListTest extends PHPUnit_Framework_TestCase
 
     public function testPropertyProcess()
     {
-        $input = array(
+        $input = [
             'foo' => 'boo',
             'boo' => 'bar',
-        );
+        ];
         $arrayList = new ArrayList($input);
         $output = $arrayList->getNestedKeys();
 
-        $this->assertEquals($input, $output);
+        $this->assertSame($input, $output);
     }
 }

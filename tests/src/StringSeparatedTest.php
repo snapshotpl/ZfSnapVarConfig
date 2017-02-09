@@ -22,7 +22,7 @@ class StringSeparatedTest extends PHPUnit_Framework_TestCase
         $object = new StringSeparated('foo'. $defaultSeparator .'bar');
         $keys = $object->getNestedKeys();
 
-        $this->assertEquals(['foo', 'bar'], $keys);
+        $this->assertSame(['foo', 'bar'], $keys);
     }
 
     public function testDefaultNoSeparated()
@@ -30,7 +30,7 @@ class StringSeparatedTest extends PHPUnit_Framework_TestCase
         $object = new StringSeparated('foo');
         $keys = $object->getNestedKeys();
 
-        $this->assertEquals(['foo'], $keys);
+        $this->assertSame(['foo'], $keys);
     }
 
     public function testCustomSeparator()
@@ -38,7 +38,7 @@ class StringSeparatedTest extends PHPUnit_Framework_TestCase
         $object = new StringSeparated('foo|bar|baz', '|');
         $keys = $object->getNestedKeys();
 
-        $this->assertEquals(['foo', 'bar', 'baz'], $keys);
+        $this->assertSame(['foo', 'bar', 'baz'], $keys);
     }
 
     public function testFirstParameterAllowOnlyString()
@@ -60,6 +60,6 @@ class StringSeparatedTest extends PHPUnit_Framework_TestCase
         $object = new StringSeparated('foo:::bar:::baz', ':::');
         $keys = $object->getNestedKeys();
 
-        $this->assertEquals(['foo', 'bar', 'baz'], $keys);
+        $this->assertSame(['foo', 'bar', 'baz'], $keys);
     }
 }

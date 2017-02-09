@@ -4,7 +4,6 @@ namespace ZfSnapVarConfig;
 
 final class ArrayList extends AbstractVarConfig
 {
-
     /**
      * @param array $keys
      */
