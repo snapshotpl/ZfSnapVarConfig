@@ -69,6 +69,10 @@ final class Module implements InitProviderInterface
             $this->prepareConfigCallback($currentItem, $itemKey, $config);
         }
 
+        if (is_array($currentItem)) {
+            array_walk_recursive($currentItem, [$this, 'prepareConfigCallback'], $config);
+        }
+
         $item = $currentItem;
     }
 }
