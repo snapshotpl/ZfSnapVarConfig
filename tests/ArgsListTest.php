@@ -2,9 +2,10 @@
 
 namespace ZfSnapVarConfig\Test;
 
+use PHPUnit\Framework\TestCase;
 use ZfSnapVarConfig\ArgsList;
 
-class ArgsListTest extends \PHPUnit_Framework_TestCase
+class ArgsListTest extends TestCase
 {
     public function testPropertyProcess()
     {

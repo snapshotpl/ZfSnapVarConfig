@@ -1,10 +1,14 @@
 {
     "name": "snapshotpl/zf-snap-var-config",
-    "description": "Variables in configuration for Zend Framework 2",
+    "description": "Variables in array",
     "keywords": [
+        "arrays",
+        "utils",
         "zf2",
+        "zf3",
         "zend framework",
         "zend framework 2",
+        "zend framework 3",
         "configuration"
     ],
     "authors": [
@@ -15,11 +19,14 @@
         }
     ],
     "require": {
-        "php": ">=5.6",
-        "zendframework/zend-modulemanager": "^2.3"
+        "php": ">=5.6"
     },
     "require-dev": {
+        "zendframework/zend-modulemanager": "^2.3",
         "phpunit/phpunit": "^5.7"
+    },
+    "suggest": {
+        "zendframework/zend-modulemanager": "^2.3 Provides variables in configs after merge"
     },
     "autoload": {
         "psr-4": {
