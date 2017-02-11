@@ -22,7 +22,7 @@ return [
 Of course it's working, but when you want to share `$myIp` between separate config files thats challange! ZfSnapVarConfig make a magic here!
 
 ```php
-return [
+$data = [
     'ips' => [
         'local' => '127.0.0.1',
         'memcache' => '127.0.0.2',
@@ -38,14 +38,26 @@ return [
         'other-address' => new ZfSnapVarConfig\ArgsList('ips', 'smtp'),
     ],
 ];
-```
 
-```php
-return [
-    'form' => [
-        'address' => new ZfSnapVarConfig\StringSeparated('email'),
+$service = new ZfSnapVarConfig\VarConfigService();
+$replaced = $service->replace($data); // or $service($data);
+
+assertSame([
+    'ips' => [
+        'local' => '127.0.0.1',
+        'memcache' => '127.0.0.2',
+        'smtp' => '127.0.0.3'
     ],
-];
+    'email' => 'your@email.com',
+    'db' => '127.0.0.1',
+    'memcache' => '127.0.0.2',
+    'email' => [
+        'smtp' => '127.0.0.3',
+        'default-mail' => 'your@email.com',
+        'reply-to' => 'your@email.com',
+        'other-address' => '127.0.0.3',
+    ],
+], $replaced);
 ```
 
 On this moment you can use selectors:
