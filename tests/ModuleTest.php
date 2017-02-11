@@ -2,133 +2,44 @@
 
 namespace ZfSnapVarConfig\Test;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
+use Zend\EventManager\EventManager;
+use Zend\ModuleManager\Listener\ConfigListener;
+use Zend\ModuleManager\ModuleEvent;
+use Zend\ModuleManager\ModuleManager;
 use ZfSnapVarConfig\ArgsList;
-use ZfSnapVarConfig\Exception;
 use ZfSnapVarConfig\Module;
-use ZfSnapVarConfig\VarConfigInterface;
 
-class ModuleTest extends PHPUnit_Framework_TestCase
+class ModuleTest extends TestCase
 {
-    protected $module;
+    private $module;
 
     protected function setUp()
     {
         $this->module = new Module();
     }
 
-    public function testPrepareConfigFromFirstElement()
+    public function testMergeConfig()
     {
-        $config = [
-            'sharedConfig' => 'sharedValue',
-            'awesome' => new ArgsList('sharedConfig'),
-        ];
-        $preparedConfig = $this->module->prepareConfig($config);
+        $eventManager = new EventManager();
+        $configListener = new ConfigListener();
+        $configListener->setMergedConfig([
+            'value' => 1,
+            'copied' => new ArgsList('value'),
+        ]);
 
-        $this->assertSame($config['sharedConfig'], $preparedConfig['awesome']);
-    }
+        $moduleManager = new ModuleManager([], $eventManager);
 
-    public function testPrepareConfigFromNestedKeys()
-    {
-        $config = [
-            'sharedConfig' => [
-                'nested' => [
-                    'very' => 'nestedValue',
-                ],
-            ],
-            'awesome' => new ArgsList('sharedConfig', 'nested', 'very'),
-        ];
-        $preparedConfig = $this->module->prepareConfig($config);
+        $event = $moduleManager->getEvent();
+        $event->setName(ModuleEvent::EVENT_MERGE_CONFIG);
+        $event->setConfigListener($configListener);
 
-        $this->assertSame($config['sharedConfig']['nested']['very'], $preparedConfig['awesome']);
-    }
+        $this->module->init($moduleManager);
 
-    public function testPrepareConfigFromNestedVars()
-    {
-        $config = [
-            'value' => 'baz',
-            'sharedConfig' => [
-                'nested' => [
-                    'very' => new ArgsList('value'),
-                ],
-            ],
-            'awesome' => new ArgsList('sharedConfig', 'nested', 'very'),
-        ];
-        $preparedConfig = $this->module->prepareConfig($config);
+        $eventManager->triggerEvent($event);
 
-        $this->assertSame($config['value'], $preparedConfig['awesome']);
-    }
+        $result = $configListener->getMergedConfig(false);
 
-    public function testPrepareConfigFromNestedVars2()
-    {
-        $config = [
-            'value' => 'baz',
-            'sharedConfig' => [
-                'nesteded' => new ArgsList('sharedConfig', 'nested'),
-                'nested' => [
-                    'very' => new ArgsList('value'),
-                ],
-            ],
-        ];
-        $preparedConfig = $this->module->prepareConfig($config);
-
-        $this->assertSame(['very' => 'baz'], $preparedConfig['sharedConfig']['nesteded']);
-    }
-
-    public function testFailPrepareConfigFromEmptyArray()
-    {
-        $config = [
-            'awesome' => new ArgsList(),
-        ];
-
-        $this->setExpectedException(Exception::class, 'It is not an array or is empty');
-
-        $this->module->prepareConfig($config);
-    }
-
-    public function testFailPrepareConfigFromNonArray()
-    {
-        $mock = $this->createMock(VarConfigInterface::class, array('getNestedKeys'));
-        $mock->method('getNestedKeys')->willReturn('string');
-
-        $config = [
-            'awesome' => $mock,
-        ];
-
-        $this->setExpectedException(Exception::class, 'It is not an array or is empty');
-
-        $this->module->prepareConfig($config);
-    }
-
-    public function testFailPrepareConfigFromNonExisitigKey()
-    {
-        $mock = $this->createMock(VarConfigInterface::class, array('getNestedKeys'));
-        $mock->expects($this->any())->method('getNestedKeys')->willReturn(array(
-        ));
-
-        $config = array(
-            'bar' => 'foo',
-            'awesome' => new ArgsList('baz'),
-        );
-
-        $this->setExpectedException(Exception::class, 'Unknown configuration key baz');
-
-        $this->module->prepareConfig($config);
-    }
-
-    public function testFailPrepareConfigFromNonExisitigNestedKey()
-    {
-        $mock = $this->createMock(VarConfigInterface::class, array('getNestedKeys'));
-        $mock->expects($this->any())->method('getNestedKeys')->willReturn(array(
-        ));
-
-        $config = array(
-            'bar' => 'foo',
-            'awesome' => new ArgsList('bar', 'baz'),
-        );
-
-        $this->setExpectedException(Exception::class, 'Unknown configuration key bar->baz');
-
-        $this->module->prepareConfig($config);
+        $this->assertSame(['value' => 1, 'copied' => 1], $result);
     }
 }

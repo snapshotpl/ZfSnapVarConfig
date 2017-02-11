@@ -2,12 +2,12 @@
 
 namespace ZfSnapVarConfig\Test;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use ZfSnapVarConfig\Exception;
 use ZfSnapVarConfig\StringSeparated;
 use ZfSnapVarConfig\VarConfigInterface;
 
-class StringSeparatedTest extends PHPUnit_Framework_TestCase
+class StringSeparatedTest extends TestCase
 {
     public function testImplementsInterface()
     {

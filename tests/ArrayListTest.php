@@ -2,11 +2,11 @@
 
 namespace ZfSnapVarConfig\Test;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use ZfSnapVarConfig\ArrayList;
 use ZfSnapVarConfig\VarConfigInterface;
 
-class ArrayListTest extends PHPUnit_Framework_TestCase
+class ArrayListTest extends TestCase
 {
     public function testImplementsInterface()
     {

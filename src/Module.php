@@ -8,71 +8,27 @@ use Zend\ModuleManager\ModuleManagerInterface;
 
 final class Module implements InitProviderInterface
 {
-    public function init(ModuleManagerInterface $manager)
+    private $varConfigService;
+
+    public function __construct()
     {
-        $em = $manager->getEventManager();
-        $em->attach(ModuleEvent::EVENT_MERGE_CONFIG, [$this, 'onMergeConfig']);
+        $this->varConfigService = new VarConfigService();
     }
 
-    public function onMergeConfig(ModuleEvent $event)
+    public function init(ModuleManagerInterface $manager)
+    {
+        $manager->getEventManager()->attach(ModuleEvent::EVENT_MERGE_CONFIG, function ($event) {
+            $this->onMergeConfigHandler($event);
+        });
+    }
+
+    private function onMergeConfigHandler(ModuleEvent $event)
     {
         $configListener = $event->getConfigListener();
         $config = $configListener->getMergedConfig(false);
 
-        $preparedConfig = $this->prepareConfig($config);
+        $preparedConfig = $this->varConfigService->replace($config);
 
         $configListener->setMergedConfig($preparedConfig);
-    }
-
-    /**
-     * @return array
-     */
-    public function prepareConfig(array $config)
-    {
-        array_walk_recursive($config, [$this, 'prepareConfigCallback'], $config);
-
-        return $config;
-    }
-
-    /**
-     * @param VarConfigInterface|mixed $item
-     * @param string $itemKey
-     * @param array $config
-     *
-     * @return void
-     *
-     * @throws Exception
-     */
-    public function prepareConfigCallback(&$item, $itemKey, array $config)
-    {
-        if (!$item instanceof VarConfigInterface) {
-            return;
-        }
-        $keys = $item->getNestedKeys();
-        $prevKeys = [];
-        $currentItem = $config;
-
-        if (!is_array($keys) || empty($keys)) {
-            throw new Exception('It is not an array or is empty');
-        }
-
-        foreach ($keys as $key) {
-            $prevKeys[] = $key;
-
-            if (!isset($currentItem[$key])) {
-                throw new Exception(sprintf('Unknown configuration key %s', implode('->', $prevKeys)));
-            }
-            $currentItem = $currentItem[$key];
-        }
-
-        if ($currentItem instanceof VarConfigInterface) {
-            $this->prepareConfigCallback($currentItem, $itemKey, $config);
-        }
-
-        if (is_array($currentItem)) {
-            array_walk_recursive($currentItem, [$this, 'prepareConfigCallback'], $config);
-        }
-
-        $item = $currentItem;
     }
 }
