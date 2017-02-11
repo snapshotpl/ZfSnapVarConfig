@@ -10,8 +10,8 @@ class ArgsListTest extends TestCase
     public function testPropertyProcess()
     {
         $arrayList = new ArgsList('boo', 'foo');
-        $output = $arrayList->getNestedKeys();
+        $nestedKeys = $arrayList->getNestedKeys();
 
-        $this->assertSame(['boo', 'foo'], $output);
+        $this->assertSame(['boo', 'foo'], $nestedKeys->getKeys());
     }
 }

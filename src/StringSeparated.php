@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ZfSnapVarConfig;
 
 final class StringSeparated extends AbstractVarConfig
@@ -7,18 +9,15 @@ final class StringSeparated extends AbstractVarConfig
     const DEFAULT_SEPARATOR = '.';
 
     /**
-     * @param string $string
-     * @param string $separator
-     *
      * @throws Exception
      */
-    public function __construct($string, $separator = self::DEFAULT_SEPARATOR)
+    public function __construct(string $string, string $separator = self::DEFAULT_SEPARATOR)
     {
-        if (!is_string($string) || empty($string)) {
-            throw new Exception('Expect first parameter to be not empty string');
+        if (empty($string)) {
+            throw new InvalidArgumentException('String cannot be empty');
         }
-        if (!is_string($separator) || empty($separator)) {
-            throw new Exception('Expect second parameter to be not empty string');
+        if (empty($separator)) {
+            throw new InvalidArgumentException('Separator cannot be empty');
         }
         $this->keys = explode($separator, $string);
     }
