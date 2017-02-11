@@ -22,4 +22,4 @@ before_install:
   - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest ; fi
 
 script:
-    - phpunit
+    - vendor/bin/phpunit

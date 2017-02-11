@@ -82,7 +82,8 @@ class VarConfigServiceTest extends TestCase
             'awesome' => new ArgsList('baz'),
         ];
 
-        $this->setExpectedException(Exception::class, 'Unknown configuration key baz');
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Unknown configuration key baz');
 
         $this->service->replace($config);
     }
