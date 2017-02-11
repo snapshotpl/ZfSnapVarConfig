@@ -1,7 +1,9 @@
 ZfSnapVarConfig [![Build Status](https://travis-ci.org/snapshotpl/ZfSnapVarConfig.svg?branch=master)](https://travis-ci.org/snapshotpl/ZfSnapVarConfig)
 ===============
 
-Variables in configuration for Zend Framework 2 and 3
+Variables in array.
+
+Additional provides module for Zend Framework 2 and 3 for configurations.
 
 Usage
 -----
@@ -51,7 +53,7 @@ On this moment you can use selectors:
 * `ZfSnapVarConfig\ArrayList`
 * `ZfSnapVarConfig\ArgsList`
 
-You can write your own selectors very easy. Just implement `ZfSnapVarConfig\VarConfigInterface` or extend `ZfSnapVarConfig\AbstractVarConfig`!
+You can write your own selectors very easy. Just implement `ZfSnapVarConfig\VarConfigInterface` or extend `ZfSnapVarConfig\AbstractVarConfig`.
 
 How to install?
 ---------------
@@ -60,4 +62,4 @@ Via [composer.json](https://getcomposer.org/)
 composer require snapshotpl/zf-snap-var-config
 ```
 
-and remember to add `ZfSnapVarConfig` module to your `application.config.php` file! :-)
+If you want to use this library as Zend Framework module add `ZfSnapVarConfig` to your `application.config.php` file.

@@ -2,6 +2,7 @@
 
 namespace ZfSnapVarConfig;
 
+use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\ModuleEvent;
 use Zend\ModuleManager\ModuleManagerInterface;
@@ -17,8 +18,15 @@ final class Module implements InitProviderInterface
 
     public function init(ModuleManagerInterface $manager)
     {
-        $manager->getEventManager()->attach(ModuleEvent::EVENT_MERGE_CONFIG, function ($event) {
+        $em = $manager->getEventManager();
+        $em->attach(ModuleEvent::EVENT_MERGE_CONFIG, function (EventInterface $event) {
             $this->onMergeConfigHandler($event);
+        });
+        $em->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, function (EventInterface $event){
+            $sm = $event->getParam('ServiceManager');
+            if ($sm !== null) {
+                $sm->setService(VarConfigService::class, $this->varConfigService);
+            }
         });
     }
 
