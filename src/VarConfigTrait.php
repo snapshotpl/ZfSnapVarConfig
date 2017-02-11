@@ -9,11 +9,8 @@ trait VarConfigTrait
      */
     protected $keys;
 
-    /**
-     * @return array
-     */
-    final public function getNestedKeys()
+    final public function getNestedKeys() : NestedKeys
     {
-        return (array) $this->keys;
+        return new NestedKeys($this->keys);
     }
 }

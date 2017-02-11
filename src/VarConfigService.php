@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ZfSnapVarConfig;
 
 final class VarConfigService
 {
-    public function replace(array $data)
+    public function replace(array $data) : array
     {
         return $this($data);
     }
 
-    public function __invoke(array $data)
+    public function __invoke(array $data) : array
     {
         array_walk_recursive($data, [$this, 'prepareConfigCallback'], $data);
 
@@ -25,18 +27,14 @@ final class VarConfigService
      *
      * @throws Exception
      */
-    public function prepareConfigCallback(&$item, $itemKey, array $config)
+    public function prepareConfigCallback(&$item, string $itemKey, array $config)
     {
         if (!$item instanceof VarConfigInterface) {
             return;
         }
-        $keys = $item->getNestedKeys();
+        $keys = $item->getNestedKeys()->getKeys();
         $prevKeys = [];
         $currentItem = $config;
-
-        if (!is_array($keys) || empty($keys)) {
-            throw new Exception('It is not an array or is empty');
-        }
 
         foreach ($keys as $key) {
             $prevKeys[] = $key;

@@ -3,7 +3,7 @@
 namespace ZfSnapVarConfig\Test;
 
 use PHPUnit\Framework\TestCase;
-use ZfSnapVarConfig\Exception;
+use ZfSnapVarConfig\InvalidArgumentException;
 use ZfSnapVarConfig\StringSeparated;
 use ZfSnapVarConfig\VarConfigInterface;
 
@@ -20,46 +20,46 @@ class StringSeparatedTest extends TestCase
     {
         $defaultSeparator = StringSeparated::DEFAULT_SEPARATOR;
         $object = new StringSeparated('foo'. $defaultSeparator .'bar');
-        $keys = $object->getNestedKeys();
+        $nestedKeys = $object->getNestedKeys();
 
-        $this->assertSame(['foo', 'bar'], $keys);
+        $this->assertSame(['foo', 'bar'], $nestedKeys->getKeys());
     }
 
     public function testDefaultNoSeparated()
     {
         $object = new StringSeparated('foo');
-        $keys = $object->getNestedKeys();
+        $nestedKeys = $object->getNestedKeys();
 
-        $this->assertSame(['foo'], $keys);
+        $this->assertSame(['foo'], $nestedKeys->getKeys());
+    }
+
+    public function testCannotCreateWithEmptyString()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new StringSeparated('');
+    }
+
+    public function testCannotCreateWithEmptySeparator()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new StringSeparated('foo.bar', '');
     }
 
     public function testCustomSeparator()
     {
         $object = new StringSeparated('foo|bar|baz', '|');
-        $keys = $object->getNestedKeys();
+        $nestedKeys = $object->getNestedKeys();
 
-        $this->assertSame(['foo', 'bar', 'baz'], $keys);
-    }
-
-    public function testFirstParameterAllowOnlyString()
-    {
-        $this->setExpectedException(Exception::class);
-
-        new StringSeparated(['foo', 'bar']);
-    }
-
-    public function testSecondParameterAllowOnlyString()
-    {
-        $this->setExpectedException(Exception::class);
-
-        new StringSeparated('foo', []);
+        $this->assertSame(['foo', 'bar', 'baz'], $nestedKeys->getKeys());
     }
 
     public function testLongSeparatorString()
     {
         $object = new StringSeparated('foo:::bar:::baz', ':::');
-        $keys = $object->getNestedKeys();
+        $nestedKeys = $object->getNestedKeys();
 
-        $this->assertSame(['foo', 'bar', 'baz'], $keys);
+        $this->assertSame(['foo', 'bar', 'baz'], $nestedKeys->getKeys());
     }
 }

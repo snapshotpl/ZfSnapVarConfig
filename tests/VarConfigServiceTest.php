@@ -75,60 +75,55 @@ class VarConfigServiceTest extends TestCase
         $this->assertSame(['very' => 'baz'], $preparedConfig['sharedConfig']['nesteded']);
     }
 
-    public function testFailPrepareConfigFromEmptyArray()
-    {
-        $config = [
-            'awesome' => new ArgsList(),
-        ];
-
-        $this->setExpectedException(Exception::class, 'It is not an array or is empty');
-
-        $this->service->replace($config);
-    }
-
-    public function testFailPrepareConfigFromNonArray()
-    {
-        $mock = $this->createMock(VarConfigInterface::class, ['getNestedKeys']);
-        $mock->method('getNestedKeys')->willReturn('string');
-
-        $config = [
-            'awesome' => $mock,
-        ];
-
-        $this->setExpectedException(Exception::class, 'It is not an array or is empty');
-
-        $this->service->replace($config);
-    }
-
     public function testFailPrepareConfigFromNonExisitigKey()
     {
-        $mock = $this->createMock(VarConfigInterface::class, ['getNestedKeys']);
-        $mock->expects($this->any())->method('getNestedKeys')->willReturn(array(
-        ));
-
         $config = [
             'bar' => 'foo',
             'awesome' => new ArgsList('baz'),
         ];
 
-        $this->setExpectedException(Exception::class, 'Unknown configuration key baz');
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Unknown configuration key baz');
 
         $this->service->replace($config);
     }
 
     public function testFailPrepareConfigFromNonExisitigNestedKey()
     {
-        $mock = $this->createMock(VarConfigInterface::class, ['getNestedKeys']);
-        $mock->expects($this->any())->method('getNestedKeys')->willReturn(array(
-        ));
-
         $config = [
             'bar' => 'foo',
             'awesome' => new ArgsList('bar', 'baz'),
         ];
 
-        $this->setExpectedException(Exception::class, 'Unknown configuration key bar->baz');
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Unknown configuration key bar->baz');
 
         $this->service->replace($config);
+    }
+
+    public function testWorksWithNumeric()
+    {
+        $config = [
+            'bar' => [
+                'first-element'
+            ],
+            'awesome' => new ArgsList('bar', 0),
+        ];
+
+        $preparedConfig = $this->service->replace($config);
+
+        $this->assertSame(['bar' => ['first-element'], 'awesome' => 'first-element'], $preparedConfig);
+    }
+
+    public function testWorksWithFloats()
+    {
+        $config = [
+            0.5 => 'first-element',
+            'awesome' => new ArgsList(0.5),
+        ];
+
+        $preparedConfig = $this->service->replace($config);
+
+        $this->assertSame([0.5 => 'first-element', 'awesome' => 'first-element'], $preparedConfig);
     }
 }

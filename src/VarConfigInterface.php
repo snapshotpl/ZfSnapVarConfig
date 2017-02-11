@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ZfSnapVarConfig;
 
 interface VarConfigInterface
 {
-    /**
-     * @return array
-     */
-    public function getNestedKeys();
+    public function getNestedKeys() : NestedKeys;
 }

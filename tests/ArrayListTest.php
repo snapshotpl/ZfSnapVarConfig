@@ -22,12 +22,12 @@ class ArrayListTest extends TestCase
     public function testPropertyProcess()
     {
         $input = [
-            'foo' => 'boo',
-            'boo' => 'bar',
+            'boo',
+            'bar',
         ];
         $arrayList = new ArrayList($input);
-        $output = $arrayList->getNestedKeys();
+        $nestedKeys = $arrayList->getNestedKeys();
 
-        $this->assertSame($input, $output);
+        $this->assertSame($input, $nestedKeys->getKeys());
     }
 }
