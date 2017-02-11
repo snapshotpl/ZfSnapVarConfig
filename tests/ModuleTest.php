@@ -3,7 +3,9 @@
 namespace ZfSnapVarConfig\Test;
 
 use PHPUnit\Framework\TestCase;
+use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManager;
+use Zend\EventManager\EventManagerInterface;
 use Zend\ModuleManager\Listener\ConfigListener;
 use Zend\ModuleManager\ModuleEvent;
 use Zend\ModuleManager\ModuleManager;
@@ -36,10 +38,19 @@ class ModuleTest extends TestCase
 
         $this->module->init($moduleManager);
 
-        $eventManager->triggerEvent($event);
+        $this->triggerEvent($eventManager, $event);
 
         $result = $configListener->getMergedConfig(false);
 
         $this->assertSame(['value' => 1, 'copied' => 1], $result);
+    }
+
+    private function triggerEvent(EventManagerInterface $eventManager, EventInterface $event)
+    {
+        if (method_exists($eventManager, 'triggerEvent')) {
+            $eventManager->triggerEvent($event);
+        } else {
+            $eventManager->trigger($event);
+        }
     }
 }
