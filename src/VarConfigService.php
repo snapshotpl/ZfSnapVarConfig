@@ -32,11 +32,11 @@ final class VarConfigService
         if (!$item instanceof VarConfigInterface) {
             return;
         }
-        $nestedKeys = $item->getNestedKeys();
+        $keys = $item->getNestedKeys()->getKeys();
         $prevKeys = [];
         $currentItem = $config;
 
-        foreach ($nestedKeys->getKeys() as $key) {
+        foreach ($keys as $key) {
             $prevKeys[] = $key;
 
             if (!isset($currentItem[$key])) {
