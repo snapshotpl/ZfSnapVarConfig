@@ -19,14 +19,17 @@
         }
     ],
     "require": {
-        "php": ">=7.0"
+        "php": "^7.1"
     },
     "require-dev": {
         "zendframework/zend-modulemanager": "^2.3",
-        "phpunit/phpunit": "^6.0"
+        "zendframework/zend-servicemanager": "^3.4",
+        "phpunit/phpunit": "^7.5.13",
+        "infection/infection": "^0.13.3"
     },
     "suggest": {
-        "zendframework/zend-modulemanager": "^2.3 Provides variables in configs after merge"
+        "zendframework/zend-modulemanager": "^2.3 Provides variables in configs after merge",
+        "zendframework/zend-servicemanager": "^3.4 Provides service instance"
     },
     "autoload": {
         "psr-4": {

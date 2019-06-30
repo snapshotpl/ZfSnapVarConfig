@@ -5,11 +5,15 @@ namespace ZfSnapVarConfig\Test;
 use PHPUnit\Framework\TestCase;
 use ZfSnapVarConfig\ArgsList;
 use ZfSnapVarConfig\Exception;
+use ZfSnapVarConfig\Value\Path;
 use ZfSnapVarConfig\VarConfigInterface;
 use ZfSnapVarConfig\VarConfigService;
 
 class VarConfigServiceTest extends TestCase
 {
+    /**
+     * @var VarConfigService
+     */
     protected $service;
 
     protected function setUp()
@@ -56,7 +60,7 @@ class VarConfigServiceTest extends TestCase
         ];
         $preparedConfig = $this->service->replace($config);
 
-        $this->assertSame($config['value'], $preparedConfig['awesome']);
+        $this->assertSame('baz', $preparedConfig['awesome']);
     }
 
     public function testPrepareConfigFromNestedVars2()
@@ -64,15 +68,31 @@ class VarConfigServiceTest extends TestCase
         $config = [
             'value' => 'baz',
             'sharedConfig' => [
-                'nesteded' => new ArgsList('sharedConfig', 'nested'),
+                'nesteded' => new Path('sharedConfig', 'nested'),
                 'nested' => [
-                    'very' => new ArgsList('value'),
+                    'very' => new Path('value'),
                 ],
             ],
         ];
         $preparedConfig = $this->service->replace($config);
 
         $this->assertSame(['very' => 'baz'], $preparedConfig['sharedConfig']['nesteded']);
+    }
+
+    public function testValueToValue()
+    {
+        $config = [
+            'value' => 'baz',
+            'sharedConfig' => [
+                'nesteded' => new Path('sharedConfig', 'nested', 'very'),
+                'nested' => [
+                    'very' => new Path('value'),
+                ],
+            ],
+        ];
+        $preparedConfig = $this->service->replace($config);
+
+        $this->assertSame('baz', $preparedConfig['sharedConfig']['nesteded']);
     }
 
     public function testFailPrepareConfigFromNonExisitigKey()
@@ -101,29 +121,43 @@ class VarConfigServiceTest extends TestCase
         $this->service->replace($config);
     }
 
-    public function testWorksWithNumeric()
+    public function testWorksWithNewInterface()
     {
         $config = [
-            'bar' => [
-                'first-element'
+            'path' => [
+                'to' => 'first-element',
             ],
-            'awesome' => new ArgsList('bar', 0),
+            'awesome' => Path::fromString('path/to'),
         ];
 
         $preparedConfig = $this->service->replace($config);
 
-        $this->assertSame(['bar' => ['first-element'], 'awesome' => 'first-element'], $preparedConfig);
+        $this->assertSame(['path' => ['to' => 'first-element'], 'awesome' => 'first-element'], $preparedConfig);
     }
 
-    public function testWorksWithFloats()
+    public function testValueLoop()
     {
         $config = [
-            0.5 => 'first-element',
-            'awesome' => new ArgsList(0.5),
+            'awesome' => Path::fromString('awesome'),
         ];
 
-        $preparedConfig = $this->service->replace($config);
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('cycle');
 
-        $this->assertSame([0.5 => 'first-element', 'awesome' => 'first-element'], $preparedConfig);
+        $this->service->replace($config);
+    }
+
+    public function testValueLoop2()
+    {
+        $config = [
+            'awesome' => Path::fromString('awesome2'),
+            'awesome2' => Path::fromString('awesome3'),
+            'awesome3' => Path::fromString('awesome'),
+        ];
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('cycle');
+
+        $this->service->replace($config);
     }
 }
