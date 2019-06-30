@@ -2,6 +2,9 @@
 
 namespace ZfSnapVarConfig;
 
+/**
+ * @deprecated Use ZfSnapVarConfig\Value interface
+ */
 trait VarConfigTrait
 {
     /**

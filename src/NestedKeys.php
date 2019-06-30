@@ -7,6 +7,9 @@ namespace ZfSnapVarConfig;
 use Error;
 use InvalidArgumentException;
 
+/**
+ * @deprecated Use ZfSnapVarConfig\Value interface
+ */
 final class NestedKeys
 {
     private $keys;

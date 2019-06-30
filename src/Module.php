@@ -11,34 +11,26 @@ use Zend\ModuleManager\ModuleManagerInterface;
 
 final class Module implements InitProviderInterface
 {
-    private $varConfigService;
-
-    public function __construct()
-    {
-        $this->varConfigService = new VarConfigService();
-    }
-
-    public function init(ModuleManagerInterface $manager)
+    public function init(ModuleManagerInterface $manager): void
     {
         $em = $manager->getEventManager();
-        $em->attach(ModuleEvent::EVENT_MERGE_CONFIG, function (EventInterface $event) {
+        $em->attach(ModuleEvent::EVENT_MERGE_CONFIG, function (EventInterface $event): void {
             $this->onMergeConfigHandler($event);
-        });
-        $em->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, function (EventInterface $event){
-            $sm = $event->getParam('ServiceManager');
-            if ($sm !== null) {
-                $sm->setService(VarConfigService::class, $this->varConfigService);
-            }
         });
     }
 
-    private function onMergeConfigHandler(ModuleEvent $event)
+    private function onMergeConfigHandler(ModuleEvent $event): void
     {
         $configListener = $event->getConfigListener();
         $config = $configListener->getMergedConfig(false);
 
-        $preparedConfig = $this->varConfigService->replace($config);
+        $preparedConfig = (new VarConfigService())->replace($config);
 
         $configListener->setMergedConfig($preparedConfig);
+    }
+
+    public function getConfig(): array
+    {
+        require __DIR__ .'/../config/module.config.php';
     }
 }

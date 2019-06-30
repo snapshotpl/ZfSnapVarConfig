@@ -28,14 +28,14 @@ $data = [
         'memcache' => '127.0.0.2',
         'smtp' => '127.0.0.3'
     ],
-    'email' => 'your@email.com',
-    'db' => new ZfSnapVarConfig\StringSeparated('ips.local'),
-    'memcache' => new ZfSnapVarConfig\StringSeparated('ips|memcache', '|'),
+    'email' => new ZfSnapVarConfig\Value\Env('ADMIN_EMAIL'),
+    'db' => ZfSnapVarConfig\Value\Path::fromString('ips/local'),
+    'memcache' => ZfSnapVarConfig\Value\Path::fromString('ips|memcache', '|'),
     'email' => [
-        'smtp' => new ZfSnapVarConfig\ArrayList(['ips', 'smtp']),
-        'default-mail' => new ZfSnapVarConfig\StringSeparated('email'),
-        'reply-to' => new ZfSnapVarConfig\StringSeparated('email'),
-        'other-address' => new ZfSnapVarConfig\ArgsList('ips', 'smtp'),
+        'smtp' => ZfSnapVarConfig\Value\Path::fromArray(['ips', 'smtp']),
+        'default-mail' => ZfSnapVarConfig\Value\Path::fromString('email'),
+        'reply-to' => ZfSnapVarConfig\Value\Path::fromString('email'),
+        'other-address' => new ZfSnapVarConfig\Value\Path('ips', 'smtp'),
     ],
 ];
 
@@ -61,11 +61,11 @@ assertSame([
 ```
 
 On this moment you can use selectors:
-* `ZfSnapVarConfig\StringSeparated`
-* `ZfSnapVarConfig\ArrayList`
-* `ZfSnapVarConfig\ArgsList`
+* `ZfSnapVarConfig\Value\Path`
+* `ZfSnapVarConfig\Value\Env`
+* `ZfSnapVarConfig\Value\Callback`
 
-You can write your own selectors very easy. Just implement `ZfSnapVarConfig\VarConfigInterface` or extend `ZfSnapVarConfig\AbstractVarConfig`.
+You can write your own value manipulator. Just implement `ZfSnapVarConfig\Value` and create instance in your config.
 
 How to install?
 ---------------

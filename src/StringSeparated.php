@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace ZfSnapVarConfig;
 
+/**
+ * @deprecated Use ZfSnapVarConfig\Value interface
+ */
 final class StringSeparated extends AbstractVarConfig
 {
     const DEFAULT_SEPARATOR = '.';

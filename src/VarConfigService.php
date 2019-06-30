@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace ZfSnapVarConfig;
 
+use ZfSnapVarConfig\Value\Path;
+
 final class VarConfigService
 {
+    private $values = [];
+    private $cache = [];
+
     public function replace(array $data) : array
     {
         return $this($data);
@@ -13,41 +18,49 @@ final class VarConfigService
 
     public function __invoke(array $data) : array
     {
+        $this->values = [];
+        $this->cache = [];
         array_walk_recursive($data, [$this, 'prepareConfigCallback'], $data);
 
         return $data;
     }
 
     /**
-     * @param VarConfigInterface|mixed $item
-     * @param string $itemKey
-     * @param array $config
-     *
-     * @return void
+     * @param Value|VarConfigInterface|mixed $item
      *
      * @throws Exception
      */
-    public function prepareConfigCallback(&$item, string $itemKey, array $config)
+    private function prepareConfigCallback(&$item, string $itemKey, array $config): void
     {
-        if (!$item instanceof VarConfigInterface) {
-            return;
-        }
-        $keys = $item->getNestedKeys()->getKeys();
-        $prevKeys = [];
-        $currentItem = $config;
-
-        foreach ($keys as $key) {
-            $prevKeys[] = $key;
-
-            if (!isset($currentItem[$key])) {
-                throw new Exception(sprintf('Unknown configuration key %s', implode('->', $prevKeys)));
-            }
-            $currentItem = $currentItem[$key];
-        }
+        $currentItem = $item;
 
         if ($currentItem instanceof VarConfigInterface) {
+            $currentItem = Path::fromArray($currentItem->getNestedKeys()->getKeys());
+        }
+
+        if (! $currentItem instanceof Value) {
+            return;
+        }
+
+        $hash = spl_object_hash($currentItem);
+
+        if (isset($this->cache[$hash])) {
+            return;
+        }
+
+        if (isset($this->values[$hash])) {
+            throw new Exception('A cycle was detected for '. $itemKey);
+        }
+
+        $this->values[$hash] = $currentItem;
+
+        $currentItem = $currentItem->value($config);
+
+        if ($currentItem instanceof Value || $currentItem instanceof VarConfigInterface) {
             $this->prepareConfigCallback($currentItem, $itemKey, $config);
         }
+
+        $this->cache[$hash] = $hash;
 
         if (is_array($currentItem)) {
             array_walk_recursive($currentItem, [$this, 'prepareConfigCallback'], $config);
