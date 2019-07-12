@@ -25,7 +25,7 @@ class VarConfigServiceTest extends TestCase
     {
         $config = [
             'sharedConfig' => 'sharedValue',
-            'awesome' => new ArgsList('sharedConfig'),
+            'awesome' => new Path('sharedConfig'),
         ];
         $preparedConfig = $this->service->replace($config);
 
@@ -40,7 +40,7 @@ class VarConfigServiceTest extends TestCase
                     'very' => 'nestedValue',
                 ],
             ],
-            'awesome' => new ArgsList('sharedConfig', 'nested', 'very'),
+            'awesome' => new Path('sharedConfig', 'nested', 'very'),
         ];
         $preparedConfig = $this->service->replace($config);
 
@@ -53,14 +53,31 @@ class VarConfigServiceTest extends TestCase
             'value' => 'baz',
             'sharedConfig' => [
                 'nested' => [
-                    'very' => new ArgsList('value'),
+                    'very' => new Path('value'),
                 ],
             ],
-            'awesome' => new ArgsList('sharedConfig', 'nested', 'very'),
+            'awesome' => new Path('sharedConfig', 'nested', 'very'),
         ];
         $preparedConfig = $this->service->replace($config);
 
         $this->assertSame('baz', $preparedConfig['awesome']);
+    }
+
+    public function testPrepareConfigFromCachedNestedVars()
+    {
+        $config = [
+            'awesome' => new ArgsList('sharedConfig', 'nested', 'very'),
+            'awesome2' => new ArgsList('sharedConfig', 'nested', 'very'),
+            'value' => 'baz',
+            'sharedConfig' => [
+                'nested' => [
+                    'very' => new ArgsList('value'),
+                ],
+            ],
+        ];
+        $preparedConfig = $this->service->replace($config);
+
+        $this->assertSame('baz', $preparedConfig['awesome2']);
     }
 
     public function testPrepareConfigFromNestedVars2()
@@ -99,7 +116,7 @@ class VarConfigServiceTest extends TestCase
     {
         $config = [
             'bar' => 'foo',
-            'awesome' => new ArgsList('baz'),
+            'awesome' => new Path('baz'),
         ];
 
         $this->expectException(Exception::class);
@@ -112,7 +129,7 @@ class VarConfigServiceTest extends TestCase
     {
         $config = [
             'bar' => 'foo',
-            'awesome' => new ArgsList('bar', 'baz'),
+            'awesome' => new Path('bar', 'baz'),
         ];
 
         $this->expectException(Exception::class);
