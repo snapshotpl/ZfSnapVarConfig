@@ -33,8 +33,10 @@ final class VarConfigService
     private function prepareConfigCallback(&$item, string $itemKey, array $config): void
     {
         $currentItem = $item;
+        $hash = null;
 
         if ($currentItem instanceof VarConfigInterface) {
+            $hash = spl_object_hash($currentItem);
             $currentItem = Path::fromArray($currentItem->getNestedKeys()->getKeys());
         }
 
@@ -42,9 +44,12 @@ final class VarConfigService
             return;
         }
 
-        $hash = spl_object_hash($currentItem);
+        if ($hash === null) {
+            $hash = spl_object_hash($currentItem);
+        }
 
         if (isset($this->cache[$hash])) {
+            $item = $this->cache[$hash];
             return;
         }
 
@@ -60,7 +65,7 @@ final class VarConfigService
             $this->prepareConfigCallback($currentItem, $itemKey, $config);
         }
 
-        $this->cache[$hash] = $hash;
+        $this->cache[$hash] = $currentItem;
 
         if (is_array($currentItem)) {
             array_walk_recursive($currentItem, [$this, 'prepareConfigCallback'], $config);
