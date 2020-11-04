@@ -10,7 +10,7 @@ use ZfSnapVarConfig\Value\Path;
 
 class EnvTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp():void
     {
         putenv(self::class);
     }
