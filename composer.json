@@ -20,8 +20,7 @@
     "require-dev": {
         "laminas/laminas-modulemanager": "^2.3",
         "laminas/laminas-servicemanager": "^3.4",
-        "phpunit/phpunit": "^7.5.13 || ^9.3.8",
-        "infection/infection": "^0.20.1"
+        "phpunit/phpunit": "^7.5.13 || ^9.3.8"
     },
     "suggest": {
         "laminas/laminas-modulemanager": "^2.3 Provides variables in configs after merge",
