@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace ZfSnapVarConfig;
 
-use ZfSnapVarConfig\Value\Path;
-
 final class VarConfigService
 {
     private $values = [];
@@ -26,7 +24,7 @@ final class VarConfigService
     }
 
     /**
-     * @param Value|VarConfigInterface|mixed $item
+     * @param Value|mixed $item
      *
      * @throws Exception
      */
@@ -34,11 +32,6 @@ final class VarConfigService
     {
         $currentItem = $item;
         $hash = null;
-
-        if ($currentItem instanceof VarConfigInterface) {
-            $hash = spl_object_hash($currentItem);
-            $currentItem = Path::fromArray($currentItem->getNestedKeys()->getKeys());
-        }
 
         if (! $currentItem instanceof Value) {
             return;
@@ -61,7 +54,7 @@ final class VarConfigService
 
         $currentItem = $currentItem->value($config);
 
-        if ($currentItem instanceof Value || $currentItem instanceof VarConfigInterface) {
+        if ($currentItem instanceof Value) {
             $this->prepareConfigCallback($currentItem, $itemKey, $config);
         }
 

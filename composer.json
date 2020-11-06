@@ -15,12 +15,12 @@
         }
     ],
     "require": {
-        "php": "^7.1"
+        "php": "^7.3"
     },
     "require-dev": {
         "laminas/laminas-modulemanager": "^2.3",
         "laminas/laminas-servicemanager": "^3.4",
-        "phpunit/phpunit": "^7.5.13 || ^9.3.8"
+        "phpunit/phpunit": "^9.3.8"
     },
     "suggest": {
         "laminas/laminas-modulemanager": "^2.3 Provides variables in configs after merge",
@@ -29,6 +29,11 @@
     "autoload": {
         "psr-4": {
             "ZfSnapVarConfig\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ZfSnapVarConfig\\Test\\": "tests/"
         }
     }
 }
