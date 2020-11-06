@@ -3,12 +3,12 @@
 namespace ZfSnapVarConfig\Test;
 
 use PHPUnit\Framework\TestCase;
-use Zend\EventManager\EventInterface;
-use Zend\EventManager\EventManager;
-use Zend\EventManager\EventManagerInterface;
-use Zend\ModuleManager\Listener\ConfigListener;
-use Zend\ModuleManager\ModuleEvent;
-use Zend\ModuleManager\ModuleManager;
+use Laminas\EventManager\EventInterface;
+use Laminas\EventManager\EventManager;
+use Laminas\EventManager\EventManagerInterface;
+use Laminas\ModuleManager\Listener\ConfigListener;
+use Laminas\ModuleManager\ModuleEvent;
+use Laminas\ModuleManager\ModuleManager;
 use ZfSnapVarConfig\ArgsList;
 use ZfSnapVarConfig\Module;
 
@@ -16,7 +16,7 @@ class ModuleTest extends TestCase
 {
     private $module;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->module = new Module();
     }

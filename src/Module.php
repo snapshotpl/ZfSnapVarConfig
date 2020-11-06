@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace ZfSnapVarConfig;
 
-use Zend\EventManager\EventInterface;
-use Zend\ModuleManager\Feature\InitProviderInterface;
-use Zend\ModuleManager\ModuleEvent;
-use Zend\ModuleManager\ModuleManagerInterface;
+use Laminas\EventManager\EventInterface;
+use Laminas\ModuleManager\Feature\InitProviderInterface;
+use Laminas\ModuleManager\ModuleEvent;
+use Laminas\ModuleManager\ModuleManagerInterface;
 
 final class Module implements InitProviderInterface
 {

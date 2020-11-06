@@ -16,7 +16,7 @@ class VarConfigServiceTest extends TestCase
      */
     protected $service;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->service = new VarConfigService();
     }

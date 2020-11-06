@@ -3,7 +3,7 @@ ZfSnapVarConfig [![Build Status](https://travis-ci.org/snapshotpl/ZfSnapVarConfi
 
 Variables in array.
 
-Additional provides module for Zend Framework 2 and 3 for configurations.
+Additional provides module for Laminas for configurations.
 
 Usage
 -----
@@ -74,4 +74,4 @@ Via [composer.json](https://getcomposer.org/)
 composer require snapshotpl/zf-snap-var-config
 ```
 
-If you want to use this library as Zend Framework module add `ZfSnapVarConfig` to your `application.config.php` file.
+If you want to use this library as Laminas module add `ZfSnapVarConfig` to your `application.config.php` file.
