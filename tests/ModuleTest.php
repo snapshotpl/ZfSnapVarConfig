@@ -11,6 +11,7 @@ use Laminas\ModuleManager\ModuleEvent;
 use Laminas\ModuleManager\ModuleManager;
 use ZfSnapVarConfig\ArgsList;
 use ZfSnapVarConfig\Module;
+use ZfSnapVarConfig\Value\Path;
 
 class ModuleTest extends TestCase
 {
@@ -27,7 +28,7 @@ class ModuleTest extends TestCase
         $configListener = new ConfigListener();
         $configListener->setMergedConfig([
             'value' => 1,
-            'copied' => new ArgsList('value'),
+            'copied' => new Path('value'),
         ]);
 
         $moduleManager = new ModuleManager([], $eventManager);

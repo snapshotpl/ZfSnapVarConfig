@@ -66,12 +66,12 @@ class VarConfigServiceTest extends TestCase
     public function testPrepareConfigFromCachedNestedVars()
     {
         $config = [
-            'awesome' => new ArgsList('sharedConfig', 'nested', 'very'),
-            'awesome2' => new ArgsList('sharedConfig', 'nested', 'very'),
+            'awesome' => new Path('sharedConfig', 'nested', 'very'),
+            'awesome2' => new Path('sharedConfig', 'nested', 'very'),
             'value' => 'baz',
             'sharedConfig' => [
                 'nested' => [
-                    'very' => new ArgsList('value'),
+                    'very' => new Path('value'),
                 ],
             ],
         ];
